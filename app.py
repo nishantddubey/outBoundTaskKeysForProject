@@ -4,10 +4,10 @@ import requests
 app = Flask(__name__)
 
 # -------------------- Config --------------------
-API_URL = "" #endpoint
+API_URL = ""  #endpoint
 LOGIN_ID = "" # Add your login(email) ID here
 PASSWORD = ""  # Add your password here
-ORG_ID = "" # Add your org ID here
+ORG_ID = "" #Add your org ID here
 
 # Payload to fetch all available tasks
 ALL_TASKS_PAYLOAD = {
@@ -30,9 +30,52 @@ HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Task Fetcher</title>
+    <title>Extract Task Keys</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background-color: #f5f5f5;
+        }
+        h2 {
+            color: #333;
+        }
+        form {
+            background-color: #fff;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        input[type="submit"], button {
+            padding: 8px 16px;
+            margin-top: 10px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        input[type="submit"]:hover, button:hover {
+            background-color: #45a049;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background-color: #fff;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f0f0f0;
+        }
+        tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+    </style>
     <script>
-        // Toggle Select All checkboxes
         function toggleSelectAll(source) {
             let checkboxes = document.getElementsByName('task_ids');
             for (let i = 0; i < checkboxes.length; i++) {
@@ -40,7 +83,6 @@ HTML_TEMPLATE = """
             }
         }
 
-        // Copy table to clipboard (Excel friendly)
         function copyTableToClipboard() {
             let table = document.getElementById("taskTable");
             if (!table) {
@@ -65,7 +107,7 @@ HTML_TEMPLATE = """
     </script>
 </head>
 <body>
-    <h2>Fetch Task Definition</h2>
+    <h2>Extract Task Keys</h2>
     <form method="post">
         {% if all_tasks %}
             <label><input type="checkbox" onclick="toggleSelectAll(this)"> Select All</label><br><br>
@@ -81,12 +123,15 @@ HTML_TEMPLATE = """
 
     {% if response %}
         <h3>Task Components:</h3>
-        <button onclick="copyTableToClipboard()">Copy Table to Excel</button><br><br>
+        <div style="text-align: right; margin-bottom: 10px;">
+            <button onclick="copyTableToClipboard()">Copy Table to Excel</button>
+        </div>
         {{ response|safe }}
     {% endif %}
 </body>
 </html>
 """
+
 
 # -------------------- Functions --------------------
 def get_all_tasks():
